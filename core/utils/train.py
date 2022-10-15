@@ -123,7 +123,7 @@ class Trainer(object):
         #################
         if gen_dataloader:
             print("using generative dataloader")
-            gen_iter = gen_dataloader().__iter__()
+            gen_iter = gen_dataloader.__iter__()
             use_gen = True
         else:
             gen_iter = None
@@ -137,6 +137,7 @@ class Trainer(object):
             #################
             if gen_iter:
                 x_gen, y_gen = gen_iter.__next__()
+                x_gen = x_gen.permute(0, 3, 1, 2)
                 x_gen, y_gen = x_gen.to(device), y_gen.to(device)
             #################
 
@@ -181,14 +182,12 @@ class Trainer(object):
         Helper-based adversarial training.
         """
         if self.params.robust_loss == 'kl':
-            print("using new hat loss")
             loss, batch_metrics = new_hat_loss(self.model, x, y, x_gen, self.optimizer, y_gen=y_gen,
                                                step_size=self.params.attack_step,
                                                epsilon=self.params.attack_eps, perturb_steps=self.params.attack_iter,
                                                h=h, beta=beta, gamma=gamma, attack=self.params.attack,
                                                hr_model=self.hr_model)
         else:
-            print("using new at_hat loss")
             loss, batch_metrics = new_at_hat_loss(self.model, x, y, x_gen, self.optimizer, y_gen=y_gen,
                                                   step_size=self.params.attack_step,
                                                   epsilon=self.params.attack_eps, perturb_steps=self.params.attack_iter,
