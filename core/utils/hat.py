@@ -64,11 +64,13 @@ def new_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, eps
 
     x_adv = Variable(torch.clamp(x_adv, 0.0, 1.0), requires_grad=False)
     #################
+    print("using x_gen")
     x_hr = x_gen  # x + h * (x_adv - x)
     if y_gen:
         y_hr = y_gen
     else:
         with ctx_noparamgrad_and_eval(hr_model):
+            print("create label for x_gen")
             y_hr = hr_model(x_adv).argmax(dim=1)
     #################
 
@@ -116,6 +118,7 @@ def new_at_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, 
         y_hr = y_gen
     else:
         with ctx_noparamgrad_and_eval(hr_model):
+            print("create label for x_gen")
             y_hr = hr_model(x_adv).argmax(dim=1)
     #################
 

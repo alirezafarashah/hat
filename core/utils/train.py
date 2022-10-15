@@ -18,6 +18,8 @@ from .utils import seed
 from .hat import at_hat_loss
 from .hat import hat_loss
 from .hat import new_hat_loss
+from .hat import new_at_hat_loss
+
 from .mart import mart_loss
 from .rst import CosineLR
 from .trades import trades_loss
@@ -120,6 +122,7 @@ class Trainer(object):
 
         #################
         if gen_dataloader:
+            print("using generative dataloader")
             gen_iter = gen_dataloader().__iter__()
             use_gen = True
         else:
@@ -171,7 +174,6 @@ class Trainer(object):
             self.scheduler.step()
         return dict(metrics.mean())
 
-
     #################
     def new_hat_loss(self, x, y, x_gen, h, y_gen=None, beta=1.0, gamma=1.0):
         #
@@ -179,12 +181,14 @@ class Trainer(object):
         Helper-based adversarial training.
         """
         if self.params.robust_loss == 'kl':
+            print("using new hat loss")
             loss, batch_metrics = new_hat_loss(self.model, x, y, x_gen, self.optimizer, y_gen=y_gen,
                                                step_size=self.params.attack_step,
                                                epsilon=self.params.attack_eps, perturb_steps=self.params.attack_iter,
                                                h=h, beta=beta, gamma=gamma, attack=self.params.attack,
                                                hr_model=self.hr_model)
         else:
+            print("using new at_hat loss")
             loss, batch_metrics = new_at_hat_loss(self.model, x, y, x_gen, self.optimizer, y_gen=y_gen,
                                                   step_size=self.params.attack_step,
                                                   epsilon=self.params.attack_eps, perturb_steps=self.params.attack_iter,
