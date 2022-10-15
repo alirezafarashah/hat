@@ -69,8 +69,7 @@ def new_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, eps
         y_hr = y_gen
     else:
         with ctx_noparamgrad_and_eval(hr_model):
-
-            y_hr = hr_model(x_adv).argmax(dim=1)
+            y_hr = hr_model(x_hr).argmax(dim=1)
     #################
 
     optimizer.zero_grad()
@@ -118,7 +117,7 @@ def new_at_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, 
     else:
         with ctx_noparamgrad_and_eval(hr_model):
 
-            y_hr = hr_model(x_adv).argmax(dim=1)
+            y_hr = hr_model(x_hr).argmax(dim=1)
     #################
 
     optimizer.zero_grad()
