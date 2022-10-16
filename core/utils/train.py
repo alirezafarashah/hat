@@ -288,6 +288,28 @@ class Trainer(object):
         acc /= len(dataloader)
         return acc
 
+    ############
+    def eval_hr(self, dataloader, adversarial=False):
+        """
+        Evaluate performance of the model.
+        """
+        acc = 0.0
+        self.hr_model.eval()
+
+        for x, y in dataloader:
+            x = x.permute(0, 3, 1, 2)
+            x, y = x.to(device), y.to(device)
+            if adversarial:
+                with ctx_noparamgrad_and_eval(self.model):
+                    x_adv, _ = self.eval_attack.perturb(x, y)
+                out = self.hr_model(x_adv)
+            else:
+                out = self.hr_model(x)
+            acc += accuracy(y, out)
+        acc /= len(dataloader)
+        return acc
+    ##########
+
     def save_and_eval_adversarial(self, dataloader, save, verbose=False, to_true=False, save_all=True):
         """
         Evaluate adversarial accuracy and save perturbations.
