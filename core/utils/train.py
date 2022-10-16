@@ -295,6 +295,7 @@ class Trainer(object):
         """
         acc = 0.0
         self.hr_model.eval()
+        classes_acc = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
 
         for x, y in dataloader:
             x = x.permute(0, 3, 1, 2)
@@ -305,9 +306,13 @@ class Trainer(object):
                 out = self.hr_model(x_adv)
             else:
                 out = self.hr_model(x)
+            preds = torch.softmax(out, dim=1).argmax(dim=1)
+            for i in range(y.shape[0]):
+                if y[i] == preds[i]:
+                    classes_acc[y[i]] += 1
             acc += accuracy(y, out)
         acc /= len(dataloader)
-        return acc
+        return acc, classes_acc
     ##########
 
     def save_and_eval_adversarial(self, dataloader, save, verbose=False, to_true=False, save_all=True):

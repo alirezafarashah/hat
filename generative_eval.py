@@ -108,5 +108,6 @@ logger.log('\n\n')
 logger.log('Standard training for {} epochs'.format(NUM_STD_EPOCHS))
 old_score = [0.0]
 
-gen_acc = trainer.eval_hr(gen_dataloader, False)
+gen_acc, classes_acc = trainer.eval_hr(gen_dataloader, False)
 print("accuracy: ", gen_acc)
+print(classes_acc)
