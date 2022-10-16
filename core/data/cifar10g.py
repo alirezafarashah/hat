@@ -8,7 +8,8 @@ import numpy as np
 class GENERATIVECIFAR10(torch.utils.data.Dataset):
 
     def __init__(self, each_class=5000):
-        self.data = torch.Tensor(np.load("/content/cifar10_training_gen_data.npy"))
+        transform_images = transforms.Compose([transforms.ToTensor()])
+        self.data = transform_images(torch.Tensor(np.load("/content/cifar10_training_gen_data.npy")))
         self.target = torch.Tensor([i // each_class for i in range(len(self.data))])
 
     def __len__(self):
