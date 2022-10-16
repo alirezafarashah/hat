@@ -64,7 +64,8 @@ def new_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, eps
 
     x_adv = Variable(torch.clamp(x_adv, 0.0, 1.0), requires_grad=False)
     #################
-    x_hr = x_gen.detach()  # x + h * (x_adv - x)
+    #x_hr = x_gen.detach()  # x + h * (x_adv - x)
+    x_hr = Variable(torch.clamp(x_gen, 0.0, 1.0), requires_grad=False)
     if y_gen:
         y_hr = y_gen
     else:
