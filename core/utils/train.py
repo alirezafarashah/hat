@@ -121,6 +121,8 @@ class Trainer(object):
         self.model.train()
 
         #################
+        use_gen = False
+        gen_iter = None
         if gen_dataloader:
             print("using generative dataloader")
             gen_iter = gen_dataloader.__iter__()
@@ -146,7 +148,7 @@ class Trainer(object):
 
                     #################
                     if use_gen:
-                        loss, batch_metrics = self.new_hat_loss(x, y, x_gen, h=self.params.h, beta=self.params.beta,
+                        loss, batch_metrics = self.new_hat_loss(x=x, y=y, x_gen=x_gen, h=self.params.h, beta=self.params.beta,
                                                                 gamma=self.params.gamma)
                     else:
                         loss, batch_metrics = self.hat_loss(x, y, h=self.params.h, beta=self.params.beta,
