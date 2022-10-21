@@ -67,7 +67,7 @@ def new_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, eps
 
     x_hr = x_gen  # x + h * (x_adv - x)
 
-    if y_gen:
+    if y_gen is not None:
         y_hr = y_gen
     else:
         with ctx_noparamgrad_and_eval(hr_model):
