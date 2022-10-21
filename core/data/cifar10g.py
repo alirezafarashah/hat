@@ -8,9 +8,9 @@ import numpy as np
 class GENERATIVECIFAR10(torch.utils.data.Dataset):
 
     def __init__(self, each_class=5000):
-        self.data = torch.Tensor(np.load("/kaggle/working/cifar10_training_gen_data.npy"))
+        self.data = torch.tensor(np.load("/kaggle/working/cifar10_training_gen_data.npy"))
         self.data = self.data / 255
-        self.target = torch.Tensor([i // each_class for i in range(len(self.data))], dtype=torch.long)
+        self.target = torch.tensor([i // each_class for i in range(len(self.data))], dtype=torch.long)
 
     def __len__(self):
         return len(self.target)
