@@ -64,7 +64,7 @@ def new_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, eps
 
     x_adv = Variable(torch.clamp(x_adv, 0.0, 1.0), requires_grad=False)
     #################
-
+    x_gen = x_gen.detach() + 0.001 * torch.randn(x_gen.shape).cuda().detach()
     x_hr = Variable(torch.clamp(x_gen, 0.0, 1.0), requires_grad=False)
 
     if y_gen is not None:
@@ -113,7 +113,7 @@ def new_at_hat_loss(model, x, y, x_gen, optimizer, y_gen=None, step_size=0.007, 
     model.train()
 
     #################
-
+    x_gen = x_gen.detach() + 0.001 * torch.randn(x_gen.shape).cuda().detach()
     x_hr = Variable(torch.clamp(x_gen, 0.0, 1.0), requires_grad=False)
 
     if y_gen is not None:
