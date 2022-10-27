@@ -106,7 +106,9 @@ class Trainer(object):
             milestones = [100, 105]
             self.scheduler = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, gamma=0.1, milestones=milestones)
         elif self.params.scheduler == 'cosine':
-            self.scheduler = CosineLR(self.optimizer, max_lr=self.params.lr, epochs=int(num_epochs))
+            self.scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(self.optimizer,
+                                                                                  T_0=num_epochs / 10, T_mult=5)
+            # self.scheduler = CosineLR(self.optimizer, max_lr=self.params.lr, epochs=int(num_epochs))
         elif self.params.scheduler == 'cosinew':
             self.scheduler = torch.optim.lr_scheduler.OneCycleLR(self.optimizer, max_lr=self.params.lr, pct_start=0.025,
                                                                  total_steps=int(num_epochs))
@@ -148,7 +150,8 @@ class Trainer(object):
 
                     #################
                     if use_gen:
-                        loss, batch_metrics = self.new_hat_loss(x=x, y=y, x_gen=x_gen, h=self.params.h, beta=self.params.beta,
+                        loss, batch_metrics = self.new_hat_loss(x=x, y=y, x_gen=x_gen, h=self.params.h,
+                                                                beta=self.params.beta,
                                                                 gamma=self.params.gamma)
                     else:
                         loss, batch_metrics = self.hat_loss(x, y, h=self.params.h, beta=self.params.beta,
@@ -297,7 +300,7 @@ class Trainer(object):
         """
         acc = 0.0
         self.hr_model.eval()
-        classes_acc = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
+        classes_acc = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
 
         for x, y in dataloader:
             x = x.permute(0, 3, 1, 2)
@@ -315,6 +318,7 @@ class Trainer(object):
             acc += accuracy(y, out)
         acc /= len(dataloader)
         return acc, classes_acc
+
     ##########
 
     def save_and_eval_adversarial(self, dataloader, save, verbose=False, to_true=False, save_all=True):
