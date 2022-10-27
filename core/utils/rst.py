@@ -9,7 +9,7 @@ class CosineLR(torch.optim.lr_scheduler._LRScheduler):
     """
     def __init__(self, optimizer, max_lr, epochs, last_epoch=-1):
         self.max_lr = max_lr
-        self.epochs = epochs
+        self.epochs = epochs/5
         self._reset()
         super(CosineLR, self).__init__(optimizer, last_epoch)
     
